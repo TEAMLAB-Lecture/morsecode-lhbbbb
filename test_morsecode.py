@@ -6,8 +6,8 @@ import morsecode as mc
 from mock import patch
 from io import StringIO
 
-class TestMorseCode(unittest.TestCase):
 
+class TestMorseCode(unittest.TestCase):
     def test_is_help_command(self):
         self.assertTrue(mc.is_help_command("H"))
         self.assertTrue(mc.is_help_command("h"))
@@ -35,13 +35,13 @@ class TestMorseCode(unittest.TestCase):
     def test_is_validated_morse_code(self):
         self.assertTrue(mc.is_validated_morse_code("-"))
         self.assertTrue(mc.is_validated_morse_code("-."))
-        self.assertTrue(mc.is_validated_morse_code('... --- ...'))
-        self.assertTrue(mc.is_validated_morse_code('.... . .-.. .-.. ---'))
-        self.assertTrue(mc.is_validated_morse_code('.... ..'))
+        self.assertTrue(mc.is_validated_morse_code("... --- ..."))
+        self.assertTrue(mc.is_validated_morse_code(".... . .-.. .-.. ---"))
+        self.assertTrue(mc.is_validated_morse_code(".... .."))
 
-        self.assertFalse(mc.is_validated_morse_code('....... .. '))
-        self.assertFalse(mc.is_validated_morse_code('lfef'))
-        self.assertFalse(mc.is_validated_morse_code('.-.---.-- .---. ----'))
+        self.assertFalse(mc.is_validated_morse_code("....... .. "))
+        self.assertFalse(mc.is_validated_morse_code("lfef"))
+        self.assertFalse(mc.is_validated_morse_code(".-.---.-- .---. ----"))
 
     def test_get_cleaned_english_sentence(self):
         test_sentence = "This is CS50."
@@ -52,14 +52,12 @@ class TestMorseCode(unittest.TestCase):
 
         test_sentence = "This is CS50!!!"
         self.assertEqual(
-            mc.get_cleaned_english_sentence(test_sentence),
-            "This is CS50",
+            mc.get_cleaned_english_sentence(test_sentence), "This is CS50",
         )
 
         test_sentence = "Hello, My name is CS50?"
         self.assertEqual(
-            mc.get_cleaned_english_sentence(test_sentence),
-            "Hello My name is CS50",
+            mc.get_cleaned_english_sentence(test_sentence), "Hello My name is CS50",
         )
 
     def test_decoding_character(self):
@@ -85,22 +83,34 @@ class TestMorseCode(unittest.TestCase):
         self.assertEqual(mc.decoding_sentence(".. -- ."), "IME")
 
     def test_encoding_sentence(self):
-        self.assertEqual((mc.encoding_sentence("Sungchul    CHOI") ).strip(), "... ..- -. --. -.-. .... ..- .-..  -.-. .... --- ..")
-        self.assertEqual((mc.encoding_sentence("GACHON UNIV.!")).strip(), "--. .- -.-. .... --- -.  ..- -. .. ...-")
-        self.assertEqual((mc.encoding_sentence("HI! Fine Thank, you.")).strip(), ".... ..  ..-. .. -. .  - .... .- -. -.-  -.-- --- ..-")
-        self.assertEqual((mc.encoding_sentence("WHERE ARE YOU GOING?")).strip(), ".-- .... . .-. .  .- .-. .  -.-- --- ..-  --. --- .. -. --.")
+        self.assertEqual(
+            (mc.encoding_sentence("Sungchul    CHOI")).strip(),
+            "... ..- -. --. -.-. .... ..- .-..  -.-. .... --- ..",
+        )
+        self.assertEqual(
+            (mc.encoding_sentence("GACHON UNIV.!")).strip(),
+            "--. .- -.-. .... --- -.  ..- -. .. ...-",
+        )
+        self.assertEqual(
+            (mc.encoding_sentence("HI! Fine Thank, you.")).strip(),
+            ".... ..  ..-. .. -. .  - .... .- -. -.-  -.-- --- ..-",
+        )
+        self.assertEqual(
+            (mc.encoding_sentence("WHERE ARE YOU GOING?")).strip(),
+            ".-- .... . .-. .  .- .-. .  -.-- --- ..-  --. --- .. -. --.",
+        )
 
     def test_main(self):
         for x in range(50):
-            with patch('builtins.input', side_effect=["0"]):
-                with patch('sys.stdout', new=StringIO()) as fakeOutput:
+            with patch("builtins.input", side_effect=["0"]):
+                with patch("sys.stdout", new=StringIO()) as fakeOutput:
                     mc.main()
                     console = fakeOutput.getvalue().strip().split("\n")
                     self.assertIn(console[1].upper(), "GOOD BYE")
 
         input_list = ["woesds.l;", "_e_we", "12434cscs21", "545caacas", "--------", "0"]
-        with patch('builtins.input', side_effect=input_list):
-            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+        with patch("builtins.input", side_effect=input_list):
+            with patch("sys.stdout", new=StringIO()) as fakeOutput:
                 mc.main()
                 console = fakeOutput.getvalue().strip().split("\n")
                 self.assertIn("WRONG", console[1].upper())
@@ -111,10 +121,18 @@ class TestMorseCode(unittest.TestCase):
 
         print(console)
 
-        input_list = ["Hello!!", "Hi, Gachon", "This is,! CS50", "WTF!", "--. --", "--. --.  --. -  -  -  - . . . .",
-                      "::helo::", "0"]
-        with patch('builtins.input', side_effect=input_list):
-            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+        input_list = [
+            "Hello!!",
+            "Hi, Gachon",
+            "This is,! CS50",
+            "WTF!",
+            "--. --",
+            "--. --.  --. -  -  -  - . . . .",
+            "::helo::",
+            "0",
+        ]
+        with patch("builtins.input", side_effect=input_list):
+            with patch("sys.stdout", new=StringIO()) as fakeOutput:
                 mc.main()
                 console = fakeOutput.getvalue().strip().split("\n")
                 self.assertIn(".... . .-.. .-.. ---", console[1].upper())
@@ -125,9 +143,10 @@ class TestMorseCode(unittest.TestCase):
                 self.assertIn("GG GT T T TEEEE", console[6].upper())
                 self.assertIn("WRONG", console[7].upper())
 
-
     def get_cleaned_english_sentence(self, raw_english_sentence):
-        english_sentence = "".join([character for character in raw_english_sentence if character not in ".,!?"])
+        english_sentence = "".join(
+            [character for character in raw_english_sentence if character not in ".,!?"]
+        )
         return english_sentence
 
     def decoding_character(self, morse_character):
@@ -161,8 +180,34 @@ class TestMorseCode(unittest.TestCase):
 
     def get_morse_code_dict(self):
         morse_code = {
-            "A": ".-", "N": "-.", "B": "-...", "O": "---", "C": "-.-.", "P": ".--.", "D": "-..", "Q": "--.-", "E": ".",
-            "R": ".-.", "F": "..-.", "S": "...", "G": "--.", "T": "-", "H": "....", "U": "..-", "I": "..", "V": "...-",
-            "K": "-.-", "X": "-..-", "J": ".---", "W": ".--", "L": ".-..", "Y": "-.--", "M": "--", "Z": "--.."
+            "A": ".-",
+            "N": "-.",
+            "B": "-...",
+            "O": "---",
+            "C": "-.-.",
+            "P": ".--.",
+            "D": "-..",
+            "Q": "--.-",
+            "E": ".",
+            "R": ".-.",
+            "F": "..-.",
+            "S": "...",
+            "G": "--.",
+            "T": "-",
+            "H": "....",
+            "U": "..-",
+            "I": "..",
+            "V": "...-",
+            "K": "-.-",
+            "X": "-..-",
+            "J": ".---",
+            "W": ".--",
+            "L": ".-..",
+            "Y": "-.--",
+            "M": "--",
+            "Z": "--..",
         }
         return morse_code
+
+
+unittest.main()
